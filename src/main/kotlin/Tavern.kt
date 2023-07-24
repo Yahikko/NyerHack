@@ -1,4 +1,6 @@
 import java.io.File
+import kotlin.random.Random
+import kotlin.random.nextInt
 
 private const val TAVERN_MASTER = "Taernyl"
 private const val TAVERN_NAME = "$TAVERN_MASTER's Folly"
@@ -40,7 +42,7 @@ fun visitTavern() {
     while (patrons.size < 5) {
         val patronName = "${firstNames.random()} ${lastNames.random()}"
         patrons += patronName
-        patronGold += patronName to 6.0
+        patronGold += patronName to Random.nextDouble(5.0, 30.0)
     }
 
 //  println(patronGold)
@@ -52,32 +54,41 @@ fun visitTavern() {
     narrate(patrons.joinToString())
 
     repeat(3) {
-        placeOrder(patrons.random(), menuItems.random(), patronGold)
+        placeOrder(patrons.random(), patronGold)
     }
     displayPatronBalances(patronGold)
 }
 
 private fun placeOrder(
     patronName: String,
-    menuItemName: String,
     patronGold: MutableMap<String, Double>
 ) {
-    val itemPrice = menuItemPrices.getValue(menuItemName)
-    val action = when (menuItemTypes[menuItemName]) {
-        "shandy", "elixir" -> "pours"
-        "meal" -> "serves"
-        else -> "hands"
+    val itemsCount = Random.nextInt(1..3)
+    val itemsToOrder = mutableMapOf<String, Double>()
+    var itemsPrice = 0.0
+    var items = ""
+
+    repeat(itemsCount) {
+        val i = menuItems[Random.nextInt(menuItems.size)]
+        itemsToOrder += i to menuItemPrices.getValue(i)
+        itemsPrice += menuItemPrices.getValue(i)
     }
 
     narrate("$patronName speaks with $TAVERN_MASTER to place an order")
 
-    if (itemPrice <= patronGold.getOrDefault(patronName, 0.0)) {
-        narrate("$TAVERN_MASTER $action $patronName a $menuItemName")
-        narrate("$patronName pays $TAVERN_MASTER $itemPrice gold")
-        patronGold[patronName] = patronGold.getValue(patronName) - itemPrice
-        patronGold[TAVERN_MASTER] = patronGold.getValue(TAVERN_MASTER) + itemPrice
+    if (patronGold.getOrDefault(patronName, 0.0) >= itemsPrice) {
+
+        itemsToOrder.forEach{ i ->
+            items += "${i.key}, "
+        }
+        items = items.dropLast(2)
+
+        narrate("$TAVERN_MASTER hands $patronName $items")
+        narrate("$patronName pays $TAVERN_MASTER $itemsPrice gold")
+        patronGold[patronName] = patronGold.getValue(patronName) - itemsPrice
+        patronGold[TAVERN_MASTER] = patronGold.getValue(TAVERN_MASTER) + itemsPrice
     } else {
-        narrate("$TAVERN_MASTER says, \"You need more coin for a $menuItemName\"")
+        narrate("$TAVERN_MASTER says, \"You need more coin for a this order\"")
     }
 }
 
