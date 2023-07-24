@@ -17,11 +17,10 @@ private val menuItems = List(menuData.size) { index ->
 
 fun visitTavern() {
     narrate("$heroName enters $TAVERN_NAME")
-    narrate("There are several items for sale:")
-    menuItems.forEach { item -> println(item) }
     printMenu()
 
     val patrons: MutableSet<String> = mutableSetOf()
+
     while (patrons.size < 10) {
         patrons += "${firstNames.random()} ${lastNames.random()}"
     }
@@ -37,19 +36,29 @@ fun visitTavern() {
 // В файле tavern-menu-data необходимо добавить пробел в конце,
 // иначе невозможно сделать все надписи одной ширины
 private fun printMenu() {
-
     val menuGreetings = "*** Welcome to $TAVERN_NAME ***"
-    val menuGreetingsLength = "*** Welcome to $TAVERN_NAME ***".count()
+    val menuGreetingsLength = menuGreetings.count()
+    val menuList = mutableListOf<String>()
 
-    val menuItems = List(menuData.size) { index ->
-        val (_, name, price) = menuData[index].split(",")
-        val difference = menuGreetingsLength - name.length - price.length + 1
-        val item = name + ".".repeat(difference) + price
-        item
+    menuData.forEach { index1 ->
+        val (type1, _, _) = index1.split(",")
+        val placeForType = menuGreetingsLength / 2 - type1.count() / 2 - 3
+        val typeToMenu = "${" ".repeat(placeForType)}~[$type1]~"
+
+        if (!menuList.contains(typeToMenu)) {
+            menuList += typeToMenu
+            menuData.forEach { index2 ->
+                val (type2, name, price) = index2.split(",")
+                if (type1 == type2) {
+                    val difference = menuGreetingsLength - name.length - price.length + 1
+                    val item = name + ".".repeat(difference) + price
+                    menuList += item
+                }
+            }
+        }
     }
-
     println(menuGreetings)
-    menuItems.forEach { println(it) }
+    menuList.forEach { println(it) }
 }
 
 private fun placeOrder(patronName: String, menuItemName: String) {
