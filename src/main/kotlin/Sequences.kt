@@ -1,10 +1,21 @@
+import kotlin.system.measureNanoTime
+
 fun main() {
     // Sequence - последовательность - отложенная (lazy) коллекция
-    val oneThousandPrimes = generateSequence(3) { value ->
-        value + 1
-    }.filter { isPrime(it) }.take(10000)
+    val sequenceInNanos = measureNanoTime {
+        val oneThousandPrimes = generateSequence(3) { value ->
+            value + 1
+        }.filter { isPrime(it) }.take(10000)
+    }
+    val listInNanos = measureNanoTime {
+        val listOfPrimes = (1..7919)
+            .toList()
+            .filter { isPrime(it) }
+            .take(1000)
+    }
 
-    oneThousandPrimes.forEach { println(it) }
+    println("Sequence completed in $sequenceInNanos ns")
+    println("List completed in $listInNanos ns")
 }
 
 fun isPrime(number: Int): Boolean {
