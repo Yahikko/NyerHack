@@ -39,22 +39,17 @@ fun visitTavern() {
     narrate("$heroName sees several patrons in the tavern:")
     narrate(patrons.joinToString())
 
-    val mostCommonItems = patrons.flatMap { getFavoriteMenuItems(it) }
-    val mainItem = mostCommonItems.groupBy { it }.maxByOrNull { it.value.size }?.key
-    println("The item of the day is the $mainItem")
-
     repeat(3) {
         placeOrder(patrons.random(), menuItems.random(), patronGold)
     }
     displayPatronBalances(patronGold)
 
-    val departingPatrons: List<String> = patrons.filter { patron ->
+    patrons.filter { patron ->
         patronGold.getOrDefault(patron, 0.0) < 4.0
-    }
-    patrons -= departingPatrons.toSet()
-    patronGold -= departingPatrons
-
-    departingPatrons.forEach { patron ->
+    }.also { departingPatrons ->
+        patrons -= departingPatrons.toSet()
+        patronGold -= departingPatrons.toSet()
+    }.forEach { patron ->
         narrate("$heroName sees $patron departing the tavern")
     }
     narrate("There are still some patrons in the tavern")
@@ -70,9 +65,6 @@ private fun getFavoriteMenuItems(patron: String): List<String> {
         else -> menuItems.shuffled().take(Random.nextInt(1..2))
     }
 }
-
-private fun flipValues(map: Map<String, Double>): Map<String, Double> =
-    map.map { it.key to it.value }.shuffled().toMap()
 
 private fun placeOrder(
     patronName: String,
