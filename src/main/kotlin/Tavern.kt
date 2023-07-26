@@ -36,26 +36,20 @@ fun visitTavern() {
         *patrons.map { it to 6.0 }.toTypedArray()
     )
 
-
-
     narrate("$heroName sees several patrons in the tavern:")
     narrate(patrons.joinToString())
-
-    val itemOfDay = patrons.flatMap { getFavoriteMenuItems(it) }.random()
-    println("The item of the day is the $itemOfDay")
 
     repeat(3) {
         placeOrder(patrons.random(), menuItems.random(), patronGold)
     }
     displayPatronBalances(patronGold)
 
-    val departingPatrons: List<String> = patrons.filter { patron ->
+    patrons.filter { patron ->
         patronGold.getOrDefault(patron, 0.0) < 4.0
-    }
-    patrons -= departingPatrons.toSet()
-    patronGold -= departingPatrons
-
-    departingPatrons.forEach { patron ->
+    }.also { departingPatrons ->
+        patrons -= departingPatrons.toSet()
+        patronGold -= departingPatrons.toSet()
+    }.forEach { patron ->
         narrate("$heroName sees $patron departing the tavern")
     }
     narrate("There are still some patrons in the tavern")
