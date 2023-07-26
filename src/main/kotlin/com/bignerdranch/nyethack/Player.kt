@@ -1,6 +1,22 @@
 package com.bignerdranch.nyethack
 
+fun main() {
+    val player = Player()
+
+    player.printWeaponName()
+}
+
+class Weapon(val name: String)
+
 class Player {
+
+    var weapon: Weapon? = Weapon("Mjolnir")
+
+    fun printWeaponName() {
+        weapon?.let {
+            println(it.name)
+        }
+    }
 
     var name = "madrigal"
         get() = field.replaceFirstChar { it.uppercase() }
