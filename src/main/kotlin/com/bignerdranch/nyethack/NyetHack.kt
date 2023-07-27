@@ -13,13 +13,16 @@ fun main() {
     player.prophesize()
 
     val mortality = if (player.isImmortal) "an immortal" else "a mortal"
+    val currentRoom: Room = Tavern()
 
-    narrate("${player.name} of ${player.hometown}, ${player.title}")
+    narrate("${player.name} of ${player.hometown}, ${player.title} is in ${currentRoom.description()}")
     narrate("${player.name}, $mortality, has ${player.healthPoints} health points")
+    currentRoom.enterRoom()
 
-    visitTavern()
     player.prophesize()
     player.castFireball()
+
+    //visitTavern()
 }
 
 private fun promptHeroName(): String {
