@@ -1,5 +1,8 @@
 package com.bignerdranch.nyethack
 
+import java.lang.NumberFormatException
+import kotlin.system.exitProcess
+
 lateinit var player: Player
 
 fun main() {
@@ -80,6 +83,26 @@ object Game {
                 } else {
                     narrate("I don't know what direction that is")
                 }
+            }
+
+            "prophesize" -> player.prophesize()
+
+            "fireball" -> {
+                val count = try {
+                    argument.toInt()
+                } catch (ex: NumberFormatException) {
+                    0
+                }
+                when {
+                    argument.isBlank() -> player.castFireball()
+                    count in 1..5 -> player.castFireball(count)
+                    else -> narrate("I can't invoke this fireball")
+                }
+            }
+
+            "quit" -> {
+                narrate("See you") {"\u001B[36;1m$it\u001B[0m"}
+                exitProcess(0)
             }
 
             else -> narrate("I'm not sure what you're trying to do")
