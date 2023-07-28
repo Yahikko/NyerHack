@@ -13,8 +13,8 @@ class Player(
             field = value.trim()
         }
 
-    override val diceCount = 3
-    override val diceSides = 4
+    override val diceCount = 4
+    override val diceSides = 6
 
     val title: String
         get() = when {

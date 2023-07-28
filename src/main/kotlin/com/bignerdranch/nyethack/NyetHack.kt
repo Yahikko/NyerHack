@@ -1,5 +1,7 @@
 package com.bignerdranch.nyethack
 
+import kotlin.random.Random
+import kotlin.random.nextInt
 import kotlin.system.exitProcess
 
 lateinit var player: Player
@@ -29,9 +31,25 @@ private fun promptHeroName(): String {
 object Game {
 
     private val worldMap = listOf(
-        listOf(TownSquare(), Tavern(), Room("Back Room")),
-        listOf(MonsterRoom("A Long Corridor"), Room("A Generic Room")),
-        listOf(MonsterRoom("The Dungeon"))
+        listOf(
+            TownSquare(),
+            Tavern(),
+            MonsterRoom("Back Room", Draugr())
+        ),
+        listOf(
+            MonsterRoom("A Long Corridor", Goblin()),
+            Room("A Generic Room"),
+            MonsterRoom("A Wierd Room", mobSpawn())
+        ),
+        listOf(
+            MonsterRoom("The Dungeon", mobSpawn()),
+            Room("Room With Small Booty")
+        ),
+        listOf(
+            MonsterRoom("The Dragon's Lais", Dragon()),
+            Room("Room With Huge Booty"),
+            MonsterRoom("Abandoned Room", mobSpawn())
+        )
     )
 
     private var currentPosition = Coordinate(0, 0)
@@ -41,6 +59,15 @@ object Game {
         narrate("Welcome, adventurer")
         val mortality = if (player.isImmortal) "an immortal" else "a mortal"
         narrate("${player.name}, $mortality, has ${player.healthPoints} health points")
+    }
+
+    private fun mobSpawn(): Monster {
+        return when (Random.nextInt(100)) {
+            in 0..45 -> Goblin()
+            in 46..80 -> Draugr()
+            in 81..97 -> Werewolf()
+            else -> Dragon()
+        }
     }
 
     fun play() {
