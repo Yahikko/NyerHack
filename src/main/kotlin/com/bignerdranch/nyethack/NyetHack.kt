@@ -100,6 +100,22 @@ object Game {
                 }
             }
 
+            "map" -> {
+                val array = arrayOf(
+                    arrayOf("O", "O", "O"),
+                    arrayOf("O", "O"),
+                    arrayOf("O"),
+                )
+                array[currentPosition.x][currentPosition.y] = "X"
+                println(
+                    """
+                    ${array[0][0]} ${array[1][0]} ${array[2][0]} 
+                    ${array[0][1]} ${array[1][1]}
+                    ${array[0][2]}
+                """.trimIndent()
+                )
+            }
+
             "ring" -> {
                 if (currentRoom is TownSquare) {
                     TownSquare().ringBell()
