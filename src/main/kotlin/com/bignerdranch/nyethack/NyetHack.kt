@@ -100,8 +100,16 @@ object Game {
                 }
             }
 
+            "ring" -> {
+                if (currentRoom is TownSquare) {
+                    TownSquare().ringBell()
+                } else {
+                    narrate("There is nothing bell tower here")
+                }
+            }
+
             "quit" -> {
-                narrate("See you") {"\u001B[36;1m$it\u001B[0m"}
+                narrate("See you") { "\u001B[36;1m$it\u001B[0m" }
                 exitProcess(0)
             }
 
