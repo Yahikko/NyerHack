@@ -46,7 +46,7 @@ object Game {
             Room("Room With Small Booty")
         ),
         listOf(
-            MonsterRoom("The Dragon's Lais", Dragon()),
+            MonsterRoom("The Dragon's Lair", Dragon()),
             Room("Room With Huge Booty"),
             MonsterRoom("Abandoned Room", mobSpawn())
         )
@@ -133,6 +133,23 @@ object Game {
                 } else {
                     narrate("I don't know what direction that is")
                 }
+            }
+
+            "map" -> {
+                val array = listOf(
+                    arrayOf("O", "O", "O", "O"),
+                    arrayOf("O", "O", "O", "O"),
+                    arrayOf("O", "O", "O", "O"),
+                )
+                array[currentPosition.x][currentPosition.y] = "X"
+                println(
+                    """
+                    ${array[0][0]} ${array[1][0]} ${array[2][0]}
+                    ${array[0][1]} ${array[1][1]} ${array[2][1]}
+                    ${array[0][2]} ${array[1][2]}
+                    ${array[0][3]} ${array[1][3]} ${array[2][3]}
+                """.trimIndent()
+                )
             }
 
             "fight" -> fight()
