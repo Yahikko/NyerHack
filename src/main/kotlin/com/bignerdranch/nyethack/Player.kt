@@ -3,15 +3,18 @@ package com.bignerdranch.nyethack
 class Player(
     initialName: String,
     val hometown: String = "Neversummer",
-    var healthPoints: Int,
+    override var healthPoints: Int,
     val isImmortal: Boolean
-) {
+) : Fightable {
 
-    var name = initialName
+    override var name = initialName
         get() = field.replaceFirstChar { it.uppercase() }
         private set(value) {
             field = value.trim()
         }
+
+    override val diceCount = 3
+    override val diceSides = 4
 
     val title: String
         get() = when {
@@ -20,6 +23,12 @@ class Player(
             name.none { it.isLetter() } -> "The Witness Protection Member"
             else -> "The Renowned Hero"
         }
+
+    override fun takeDamage(damage: Int) {
+        if (!isImmortal) {
+            healthPoints -= damage
+        }
+    }
 
     val prophecy by lazy {
         narrate("$name embarks on an arduous quest to locate a fortune teller")
