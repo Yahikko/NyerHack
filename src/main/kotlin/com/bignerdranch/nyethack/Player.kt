@@ -18,7 +18,7 @@ class Player(
 
     val title: String
         get() = when {
-            name.count { it.lowercase() in "aeiouy" } > 4 -> "The Master of Vowels"
+            name.numVowels > 4 -> "The Master of Vowels"
             name.all { it.isDigit() } -> "The Identifiable"
             name.none { it.isLetter() } -> "The Witness Protection Member"
             else -> "The Renowned Hero"

@@ -7,9 +7,11 @@ lateinit var player: Player
 fun main() {
 
     narrate("Welcome to NyetHack!")
-//    changeNarratorMood()
     val playerName = promptHeroName()
     player = Player(playerName)
+
+    changeNarratorMood()
+
 
     Game.play()
 }
@@ -18,13 +20,11 @@ private fun promptHeroName(): String {
     narrate("A hero enters the town of Kronstadt. What is their name?") { message ->
         "\u001b[36;1m$message\u001b[0m"
     }
-    /*val input = readlnOrNull()
-    require(!heroName.isNullOrEmpty()) {
+    val input = readlnOrNull()
+    require(!input.isNullOrEmpty()) {
         "The hero must have a name."
     }
-    return input*/
-    println("Madrigal")
-    return "Madrigal"
+    return input
 }
 
 object Game {
@@ -55,16 +55,12 @@ object Game {
     }
 
     fun move(direction: Direction) {
-        val newPosition = direction.updateCoordinate(currentPosition)
-        val newRoom = worldMap.getOrNull(newPosition.y)?.getOrNull(newPosition.x)
+        val newPosition = currentPosition move direction
+        val newRoom = worldMap[newPosition].orEmptyRoom()
 
-        if (newRoom != null) {
-            narrate("The hero moves ${direction.name}")
-            currentPosition = newPosition
-            currentRoom = newRoom
-        } else {
-            narrate("You cannot move ${direction.name}")
-        }
+        narrate("The hero moves ${direction.name}")
+        currentPosition = newPosition
+        currentRoom = newRoom
     }
 
     fun fight() {
@@ -74,13 +70,22 @@ object Game {
             narrate("There's nothing to fight here")
             return
         }
+
+        var combatRound = 0
+        val previousNarrationModifier = narrationModifier
+        narrationModifier = { it.addEnthusiasm(enthusiasmLevel = combatRound) }
+
         while (player.healthPoints > 0 && currentMonster.healthPoints > 0) {
+            combatRound++
+
             player.attack(currentMonster)
             if (currentMonster.healthPoints > 0) {
                 currentMonster.attack(player)
             }
             Thread.sleep(1000)
         }
+        narrationModifier = previousNarrationModifier
+
         if (player.healthPoints <= 0) {
             narrate("You have been defeated! Thanks for playing")
             exitProcess(0)
