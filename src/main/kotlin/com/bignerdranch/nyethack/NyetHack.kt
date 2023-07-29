@@ -124,6 +124,19 @@ object Game {
         }
     }
 
+    fun configureCurrentRoom() {
+        val monsterRoom = currentRoom as? MonsterRoom ?: return
+        monsterRoom.configurePitGoblin { goblin ->
+            goblin.healthPoints = when {
+                "Haunted" in name -> 60
+                "Dungeon" in name -> 45
+                "Town Square" in name -> 15
+                else -> 30
+            }
+            goblin
+        }
+    }
+
     private class GameInput(arg: String?) {
 
         private val input = arg ?: ""

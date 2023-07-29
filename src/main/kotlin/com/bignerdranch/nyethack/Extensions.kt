@@ -13,7 +13,10 @@ infix fun Coordinate.move(direction: Direction) =
 
 fun Room?.orEmptyRoom(name: String = "the middle of nowhere"): Room = this ?: Room(name)
 
-fun <T> T.print(): T {
-    println(this)
+inline fun MonsterRoom.configurePitGoblin(
+    block: MonsterRoom.(Goblin) -> Goblin
+): MonsterRoom {
+    val goblin = block(Goblin("Pit Goblin", description = "An Evil Pit Goblin"))
+    monster = goblin
     return this
 }
