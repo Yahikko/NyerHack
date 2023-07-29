@@ -20,3 +20,12 @@ inline fun MonsterRoom.configurePitGoblin(
     monster = goblin
     return this
 }
+
+fun String.frame(padding: Int, formatChar: String = "*"): String {
+    val middle = formatChar
+        .padEnd(padding)
+        .plus(this)
+        .plus(formatChar.padStart(padding))
+    val end = (middle.indices).joinToString("") { formatChar }
+    return "$end\n$middle\n$end"
+}

@@ -12,6 +12,7 @@ fun main() {
 
     changeNarratorMood()
 
+    println("Welcome, Madrigal".frame(5))
 
     Game.play()
 }
